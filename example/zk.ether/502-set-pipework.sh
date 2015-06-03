@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -e
 set -x
 
 for f in $(seq 1 3); do \

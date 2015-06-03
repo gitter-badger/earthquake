@@ -48,6 +48,7 @@ class Util(object):
     @classmethod
     def _make_message_from_zt(cls, klazz, zt):
         msg = { 'class_group': klazz.name, 'class': zt.__class__.__name__ }
+        ignore_keys = ('timestr', 'src', 'dst', 'length', 'session_id', 'client_id', 'txn_time', 'txn_zxid', 'timeout', 'timestamp', 'ip', 'port', 'session', 'client') # because client port may differ
         def gen():
             for k in dir(zt):
                 v = getattr(zt, k)
@@ -60,7 +61,7 @@ class Util(object):
                         v = getattr(zt, alt_k)
                     yield k, v
         for k, v in gen():
-            if k in ('timestr', 'src', 'dst', 'length', 'session_id', 'client_id', 'txn_zxid'): continue
+            if k in ignore_keys: continue
             if k == 'zxid':
                 msg['zxid_hi'] = v >> 32
                 msg['zxid_low'] = v & 0xFFFF
