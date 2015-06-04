@@ -172,6 +172,7 @@ class OrchestratorBase(object):
                 return err
              
             ## wait for action from explorer
+            ## (FIXME: we should break this wait and release the sem when the conn is closed)
             got = self.processes[process_id]['queue'].get()
             action = got['action']
             LOG.debug('Dequeued action %s', action)            
@@ -180,6 +181,8 @@ class OrchestratorBase(object):
             ## return action
             action_jsdict = action.to_jsondict()
             LOG.debug('API <== %s', action_jsdict)
+
+            ## release sem
             self.processes[process_id]['sem'].release()
             return jsonify(action_jsdict)
     

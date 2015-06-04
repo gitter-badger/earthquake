@@ -9,9 +9,11 @@ import traceback
 import re
 
 def parse_stat_str(s):
+    print 'Parsing %s: ' % s
     d = {'mode': 'NOTPARSED', 'zxid': 'NOTPARSED'}
     d['mode'] = re.compile('.*Mode:\s(.*)').search(s).group(1)
     d['zxid'] = re.compile('.*Zxid:\s(.*)').search(s).group(1)
+    print 'Parsed %s: ' % d
     return d
 
 def stat(host, port=2181):
@@ -48,7 +50,7 @@ def main_nowait():
     
 
 def main_wait():
-    THRESHOLD=50
+    THRESHOLD=10
     i = 0
     while True:
         i += 1

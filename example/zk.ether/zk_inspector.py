@@ -215,7 +215,7 @@ class ZkInspector(EtherInspectorBase):
     def _map_ZkQuorumPacket_to_event(self, pkt):
         event = pkt[ZkQuorumPacket].event        
         msg = event.option['message']
-        if IGNORE_PING and (msg['class_group'] == 'ZkQuorumPacket' and msg['class'] == 'PingQP'):
+        if IGNORE_PING and (msg['class_group'] == 'ZkQuorumPacket' and msg['class'] == 'Ping'):
             return None
         self._print_packet_as(pkt, ZkQuorumPacket, colorama.Back.WHITE + colorama.Fore.BLACK)
         return event
