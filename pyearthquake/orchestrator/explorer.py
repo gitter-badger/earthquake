@@ -168,8 +168,15 @@ class ExplorerBase(object):
     def do_transition(self, digestible):
         assert isinstance(digestible, DigestibleBase)
         LOG.debug(colorama.Back.BLUE +
-                  'Invoking the callback at state=%s, digestible=%s' +
-                  colorama.Style.RESET_ALL, self.state.to_short_str(), digestible)
+                  "Invoking the action:\n" +
+                  "  action=%s\n" +
+                  "  event=%s\n" + 
+                  "  state=%s\n" + 
+                  "  digestible=%s\n" +
+                  colorama.Style.RESET_ALL, 
+                  digestible.action, digestible.event, 
+                  self.state.to_short_str(), 
+                  digestible)
         self.oc.call_action(digestible.action)
         next_state = self.state.make_copy()
         next_state.append_digestible(digestible)
