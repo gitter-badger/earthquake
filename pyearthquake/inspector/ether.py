@@ -162,8 +162,13 @@ class EtherInspectorBase(object):
 
     def on_recv_action_from_orchestrator(self, action):
         LOG.debug('Received action: %s', action)
-        ev_uuid = action.option['event_uuid']
-        self.pass_deferred_event_uuid(ev_uuid)
+        if isinstance(event, PassDeferredEventAction):
+            ev_uuid = action.option['event_uuid']
+            self.pass_deferred_event_uuid(ev_uuid)
+        elif isinstance(event, NopAction):
+            pass
+        else:
+            LOG.warn('Unsupported action: %s', action)
 
     def _oc_worker(self):
         error_count = 0

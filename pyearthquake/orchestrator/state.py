@@ -30,7 +30,8 @@ class StateBase(object):
         """
         FIXME: https://github.com/osrg/earthquake/issues/5
         """
-        return hash((tuple(self.digestible_sequence)))
+        filtered = filter(lambda d: not isinstance(d.event, InspectionEndEvent), self.digestible_sequence)
+        return hash(tuple(filtered))
 
     def __eq__(self, other):
         """
