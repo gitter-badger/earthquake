@@ -12,7 +12,7 @@ from pyearthquake.entity.event import *
 from pyearthquake.entity.action import *
 import hexdump as hd # hexdump conflict with scapy.all.hexdump
 
-import zktraffic # tested with 629490c (Apr 16 2015, AkihiroSuda/zktraffic:suda)
+import zktraffic # tested with b3e9dd0 (Jun 4 2015)
 import zktraffic.base.client_message
 import zktraffic.base.server_message
 import zktraffic.zab.quorum_packet

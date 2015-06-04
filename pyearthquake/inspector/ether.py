@@ -1,6 +1,6 @@
 from abc import ABCMeta, abstractmethod
 import eventlet
-from eventlet.green import SocketServer, zmq
+from eventlet.green import SocketServer, zmq, time
 import functools
 import hexdump
 import json
@@ -133,7 +133,7 @@ class EtherInspectorBase(object):
         """
         assert isinstance(ev, PacketEvent)
         assert ev.deferred
-        self.deferred_events[ev.uuid] = {'event': ev, 'packet': pkt}
+        self.deferred_events[ev.uuid] = {'event': ev, 'packet': pkt, 'time': time.time()}
         LOG.debug('Defer event uuid=%s, packet=%s, deferred(after defer)=%d', 
                   ev.uuid, pkt.mysummary(), len(self.deferred_events))
         

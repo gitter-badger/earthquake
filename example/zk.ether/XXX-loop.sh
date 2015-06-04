@@ -7,11 +7,11 @@ do
     ./501-start-containers.sh
     ./502-set-pipework.sh
     ./503-start-zk.sh
-    sleep 10
+    sleep 5
     ./802-check-leaders.py --wait
     ./601-reconfig.sh
     ./801-inspection-end.sh
-    ./802-check-leaders.py --wait
+    ./802-check-leaders.py --wait --foo-bar-this-is-a-dummy-arg-for-grepping
     ./901-kill-containers.sh
-    sleep 3
+    sleep 10
 done
