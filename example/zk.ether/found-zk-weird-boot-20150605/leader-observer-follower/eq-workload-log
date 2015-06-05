@@ -1,0 +1,413 @@
++ ./501-start-containers.sh
+++ ip a
+++ egrep -o 'veth.*:'
+++ sed -e s/://g
++ garbages=
+++ seq 1 3
++ for f in '$(seq 1 3)'
++ docker run -i -t -d -e ZKID=1 -e ZKENSEMBLE=1 -h zk1 --name zk1 zk_testbed /bin/bash
+1c18828d9c83ae98ff420b567eb43aeed95d8616bbd0e20ff13591f856d5be86
++ for f in '$(seq 1 3)'
++ docker run -i -t -d -e ZKID=2 -e ZKENSEMBLE=1 -h zk2 --name zk2 zk_testbed /bin/bash
+4fbfadaa3dc0060bc3916a1add6bf94b10b772ebe56f47dee3772958d2bac2f1
++ for f in '$(seq 1 3)'
++ docker run -i -t -d -e ZKID=3 -e ZKENSEMBLE=1 -h zk3 --name zk3 zk_testbed /bin/bash
+c5bf261ea0a9568af36f9b181b5fd8c45a3b10c3e5f5bb70d7b69a91c7afc6d3
++ ./502-set-pipework.sh
+++ seq 1 3
++ for f in '$(seq 1 3)'
++ sudo pipework ovsbr0 zk1 192.168.42.1/24
++ for f in '$(seq 1 3)'
++ sudo pipework ovsbr0 zk2 192.168.42.2/24
++ for f in '$(seq 1 3)'
++ sudo pipework ovsbr0 zk3 192.168.42.3/24
++ ./503-start-zk.sh
+++ seq 1 3
++ for f in '$(seq 1 3)'
++ docker exec -d zk1 /bin/bash -c '/init.py > /log 2>&1'
++ for f in '$(seq 1 3)'
++ docker exec -d zk2 /bin/bash -c '/init.py > /log 2>&1'
++ for f in '$(seq 1 3)'
++ docker exec -d zk3 /bin/bash -c '/init.py > /log 2>&1'
++ sleep 5
++ ./802-check-leaders.py --wait
+Parsing Zookeeper version: 3.6.0-SNAPSHOT--1, built on 04/09/2015 07:07 GMT
+Clients:
+ /192.168.42.254:41229[0](queued=0,recved=1,sent=0)
+
+Latency min/avg/max: 0/0/0
+Received: 1
+Sent: 0
+Connections: 1
+Outstanding: 0
+Zxid: 0x100000000
+Mode: leader
+Node count: 5
+: 
+Parsed {'zxid': '0x100000000', 'mode': 'leader'}: 
+Parsing Zookeeper version: 3.6.0-SNAPSHOT--1, built on 04/09/2015 07:07 GMT
+Clients:
+ /192.168.42.254:45526[0](queued=0,recved=1,sent=0)
+
+Latency min/avg/max: 0/0/0
+Received: 1
+Sent: 0
+Connections: 1
+Outstanding: 0
+Zxid: 0x100000000
+Mode: observer
+Node count: 5
+: 
+Parsed {'zxid': '0x100000000', 'mode': 'observer'}: 
+Parsing Zookeeper version: 3.6.0-SNAPSHOT--1, built on 04/09/2015 07:07 GMT
+Clients:
+ /192.168.42.254:53548[0](queued=0,recved=1,sent=0)
+
+Latency min/avg/max: 0/0/0
+Received: 1
+Sent: 0
+Connections: 1
+Outstanding: 0
+Zxid: 0x100000000
+Mode: follower
+Node count: 5
+: 
+Parsed {'zxid': '0x100000000', 'mode': 'follower'}: 
+[{'zxid': '0x100000000', 'mode': 'leader'}, {'zxid': '0x100000000', 'mode': 'observer'}, {'zxid': '0x100000000', 'mode': 'follower'}]
+OK
++ ./601-reconfig.sh
++ ZK=../zk/zookeeper
++ echo '=== CREATE HOGE ==='
+=== CREATE HOGE ===
++ ../zk/zookeeper/bin/zkCli.sh -server 192.168.42.3 create /hoge fubar
+/usr/bin/java
+Picked up JAVA_TOOL_OPTIONS: -javaagent:/usr/share/java/jayatanaag.jar 
+Connecting to 192.168.42.3
+2015-06-05 12:41:20,917 [myid:] - INFO  [main:Environment@109] - Client environment:zookeeper.version=3.6.0-SNAPSHOT--1, built on 05/25/2015 02:04 GMT
+2015-06-05 12:41:20,919 [myid:] - INFO  [main:Environment@109] - Client environment:host.name=suda-PC2
+2015-06-05 12:41:20,919 [myid:] - INFO  [main:Environment@109] - Client environment:java.version=1.7.0_79
+2015-06-05 12:41:20,921 [myid:] - INFO  [main:Environment@109] - Client environment:java.vendor=Oracle Corporation
+2015-06-05 12:41:20,921 [myid:] - INFO  [main:Environment@109] - Client environment:java.home=/usr/lib/jvm/java-7-openjdk-amd64/jre
+2015-06-05 12:41:20,921 [myid:] - INFO  [main:Environment@109] - Client environment:java.class.path=/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/classes:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/slf4j-log4j12-1.7.5.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/slf4j-api-1.7.5.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/servlet-api-2.5-20081211.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/netty-3.7.0.Final.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/log4j-1.2.16.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/jline-2.11.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/jetty-util-6.1.26.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/jetty-6.1.26.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/javacc.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/jackson-mapper-asl-1.9.11.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/jackson-core-asl-1.9.11.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/commons-cli-1.2.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../lib/*.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../zookeeper-*.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../src/java/lib/ivy-2.2.0.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../conf::/usr/share/java/jayatanaag.jar
+2015-06-05 12:41:20,921 [myid:] - INFO  [main:Environment@109] - Client environment:java.library.path=/usr/java/packages/lib/amd64:/usr/lib/x86_64-linux-gnu/jni:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/usr/lib/jni:/lib:/usr/lib
+2015-06-05 12:41:20,921 [myid:] - INFO  [main:Environment@109] - Client environment:java.io.tmpdir=/tmp
+2015-06-05 12:41:20,921 [myid:] - INFO  [main:Environment@109] - Client environment:java.compiler=<NA>
+2015-06-05 12:41:20,922 [myid:] - INFO  [main:Environment@109] - Client environment:os.name=Linux
+2015-06-05 12:41:20,922 [myid:] - INFO  [main:Environment@109] - Client environment:os.arch=amd64
+2015-06-05 12:41:20,922 [myid:] - INFO  [main:Environment@109] - Client environment:os.version=3.19.0-18-generic
+2015-06-05 12:41:20,922 [myid:] - INFO  [main:Environment@109] - Client environment:user.name=suda
+2015-06-05 12:41:20,922 [myid:] - INFO  [main:Environment@109] - Client environment:user.home=/home/suda
+2015-06-05 12:41:20,922 [myid:] - INFO  [main:Environment@109] - Client environment:user.dir=/home/suda/WORK/earthquake/example/zk.ether
+2015-06-05 12:41:20,922 [myid:] - INFO  [main:Environment@109] - Client environment:os.memory.free=231MB
+2015-06-05 12:41:20,924 [myid:] - INFO  [main:Environment@109] - Client environment:os.memory.max=239MB
+2015-06-05 12:41:20,924 [myid:] - INFO  [main:Environment@109] - Client environment:os.memory.total=239MB
+2015-06-05 12:41:20,926 [myid:] - INFO  [main:ZooKeeper@717] - Initiating client connection, connectString=192.168.42.3 sessionTimeout=30000 watcher=org.apache.zookeeper.ZooKeeperMain$MyWatcher@12d3e973
+2015-06-05 12:41:20,939 [myid:] - INFO  [main-SendThread(192.168.42.3:2181):ClientCnxn$SendThread@1097] - Opening socket connection to server 192.168.42.3/192.168.42.3:2181. Will not attempt to authenticate using SASL (unknown error)
+2015-06-05 12:41:20,947 [myid:] - INFO  [main-SendThread(192.168.42.3:2181):ClientCnxn$SendThread@969] - Socket connection established, initiating session, client: /192.168.42.254:53549, server: 192.168.42.3/192.168.42.3:2181
+2015-06-05 12:41:21,212 [myid:] - INFO  [main-SendThread(192.168.42.3:2181):ClientCnxn$SendThread@1359] - Session establishment complete on server 192.168.42.3/192.168.42.3:2181, sessionid = 0x3000570f87b0000, negotiated timeout = 30000
+
+WATCHER::
+
+WatchedEvent state:SyncConnected type:None path:null
+Created /hoge
++ echo '=== SYNC & RECONFIG ==='
+=== SYNC & RECONFIG ===
++ ../zk/zookeeper/bin/zkCli.sh -server 192.168.42.1 reconfig -add 'server.2=192.168.42.2:2888:3888;2181'
+/usr/bin/java
+Picked up JAVA_TOOL_OPTIONS: -javaagent:/usr/share/java/jayatanaag.jar 
+Connecting to 192.168.42.1
+2015-06-05 12:41:21,822 [myid:] - INFO  [main:Environment@109] - Client environment:zookeeper.version=3.6.0-SNAPSHOT--1, built on 05/25/2015 02:04 GMT
+2015-06-05 12:41:21,824 [myid:] - INFO  [main:Environment@109] - Client environment:host.name=suda-PC2
+2015-06-05 12:41:21,824 [myid:] - INFO  [main:Environment@109] - Client environment:java.version=1.7.0_79
+2015-06-05 12:41:21,826 [myid:] - INFO  [main:Environment@109] - Client environment:java.vendor=Oracle Corporation
+2015-06-05 12:41:21,826 [myid:] - INFO  [main:Environment@109] - Client environment:java.home=/usr/lib/jvm/java-7-openjdk-amd64/jre
+2015-06-05 12:41:21,826 [myid:] - INFO  [main:Environment@109] - Client environment:java.class.path=/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/classes:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/slf4j-log4j12-1.7.5.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/slf4j-api-1.7.5.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/servlet-api-2.5-20081211.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/netty-3.7.0.Final.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/log4j-1.2.16.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/jline-2.11.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/jetty-util-6.1.26.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/jetty-6.1.26.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/javacc.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/jackson-mapper-asl-1.9.11.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/jackson-core-asl-1.9.11.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/commons-cli-1.2.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../lib/*.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../zookeeper-*.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../src/java/lib/ivy-2.2.0.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../conf::/usr/share/java/jayatanaag.jar
+2015-06-05 12:41:21,826 [myid:] - INFO  [main:Environment@109] - Client environment:java.library.path=/usr/java/packages/lib/amd64:/usr/lib/x86_64-linux-gnu/jni:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/usr/lib/jni:/lib:/usr/lib
+2015-06-05 12:41:21,826 [myid:] - INFO  [main:Environment@109] - Client environment:java.io.tmpdir=/tmp
+2015-06-05 12:41:21,826 [myid:] - INFO  [main:Environment@109] - Client environment:java.compiler=<NA>
+2015-06-05 12:41:21,826 [myid:] - INFO  [main:Environment@109] - Client environment:os.name=Linux
+2015-06-05 12:41:21,826 [myid:] - INFO  [main:Environment@109] - Client environment:os.arch=amd64
+2015-06-05 12:41:21,827 [myid:] - INFO  [main:Environment@109] - Client environment:os.version=3.19.0-18-generic
+2015-06-05 12:41:21,827 [myid:] - INFO  [main:Environment@109] - Client environment:user.name=suda
+2015-06-05 12:41:21,827 [myid:] - INFO  [main:Environment@109] - Client environment:user.home=/home/suda
+2015-06-05 12:41:21,827 [myid:] - INFO  [main:Environment@109] - Client environment:user.dir=/home/suda/WORK/earthquake/example/zk.ether
+2015-06-05 12:41:21,827 [myid:] - INFO  [main:Environment@109] - Client environment:os.memory.free=231MB
+2015-06-05 12:41:21,828 [myid:] - INFO  [main:Environment@109] - Client environment:os.memory.max=239MB
+2015-06-05 12:41:21,828 [myid:] - INFO  [main:Environment@109] - Client environment:os.memory.total=239MB
+2015-06-05 12:41:21,830 [myid:] - INFO  [main:ZooKeeper@717] - Initiating client connection, connectString=192.168.42.1 sessionTimeout=30000 watcher=org.apache.zookeeper.ZooKeeperMain$MyWatcher@25ab52f7
+2015-06-05 12:41:21,844 [myid:] - INFO  [main-SendThread(192.168.42.1:2181):ClientCnxn$SendThread@1097] - Opening socket connection to server 192.168.42.1/192.168.42.1:2181. Will not attempt to authenticate using SASL (unknown error)
+2015-06-05 12:41:21,852 [myid:] - INFO  [main-SendThread(192.168.42.1:2181):ClientCnxn$SendThread@969] - Socket connection established, initiating session, client: /192.168.42.254:41257, server: 192.168.42.1/192.168.42.1:2181
+2015-06-05 12:41:21,898 [myid:] - INFO  [main-SendThread(192.168.42.1:2181):ClientCnxn$SendThread@1359] - Session establishment complete on server 192.168.42.1/192.168.42.1:2181, sessionid = 0x1000570f4940000, negotiated timeout = 30000
+
+WATCHER::
+
+WatchedEvent state:SyncConnected type:None path:null
+KeeperErrorCode = NewConfigNoQuorum for 
++ ../zk/zookeeper/bin/zkCli.sh -server 192.168.42.3 create /fuga barfu
+/usr/bin/java
+Picked up JAVA_TOOL_OPTIONS: -javaagent:/usr/share/java/jayatanaag.jar 
+Connecting to 192.168.42.3
+2015-06-05 12:41:22,528 [myid:] - INFO  [main:Environment@109] - Client environment:zookeeper.version=3.6.0-SNAPSHOT--1, built on 05/25/2015 02:04 GMT
+2015-06-05 12:41:22,530 [myid:] - INFO  [main:Environment@109] - Client environment:host.name=suda-PC2
+2015-06-05 12:41:22,530 [myid:] - INFO  [main:Environment@109] - Client environment:java.version=1.7.0_79
+2015-06-05 12:41:22,532 [myid:] - INFO  [main:Environment@109] - Client environment:java.vendor=Oracle Corporation
+2015-06-05 12:41:22,532 [myid:] - INFO  [main:Environment@109] - Client environment:java.home=/usr/lib/jvm/java-7-openjdk-amd64/jre
+2015-06-05 12:41:22,532 [myid:] - INFO  [main:Environment@109] - Client environment:java.class.path=/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/classes:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/slf4j-log4j12-1.7.5.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/slf4j-api-1.7.5.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/servlet-api-2.5-20081211.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/netty-3.7.0.Final.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/log4j-1.2.16.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/jline-2.11.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/jetty-util-6.1.26.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/jetty-6.1.26.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/javacc.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/jackson-mapper-asl-1.9.11.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/jackson-core-asl-1.9.11.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/commons-cli-1.2.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../lib/*.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../zookeeper-*.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../src/java/lib/ivy-2.2.0.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../conf::/usr/share/java/jayatanaag.jar
+2015-06-05 12:41:22,532 [myid:] - INFO  [main:Environment@109] - Client environment:java.library.path=/usr/java/packages/lib/amd64:/usr/lib/x86_64-linux-gnu/jni:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/usr/lib/jni:/lib:/usr/lib
+2015-06-05 12:41:22,532 [myid:] - INFO  [main:Environment@109] - Client environment:java.io.tmpdir=/tmp
+2015-06-05 12:41:22,532 [myid:] - INFO  [main:Environment@109] - Client environment:java.compiler=<NA>
+2015-06-05 12:41:22,533 [myid:] - INFO  [main:Environment@109] - Client environment:os.name=Linux
+2015-06-05 12:41:22,533 [myid:] - INFO  [main:Environment@109] - Client environment:os.arch=amd64
+2015-06-05 12:41:22,533 [myid:] - INFO  [main:Environment@109] - Client environment:os.version=3.19.0-18-generic
+2015-06-05 12:41:22,533 [myid:] - INFO  [main:Environment@109] - Client environment:user.name=suda
+2015-06-05 12:41:22,533 [myid:] - INFO  [main:Environment@109] - Client environment:user.home=/home/suda
+2015-06-05 12:41:22,533 [myid:] - INFO  [main:Environment@109] - Client environment:user.dir=/home/suda/WORK/earthquake/example/zk.ether
+2015-06-05 12:41:22,533 [myid:] - INFO  [main:Environment@109] - Client environment:os.memory.free=231MB
+2015-06-05 12:41:22,535 [myid:] - INFO  [main:Environment@109] - Client environment:os.memory.max=239MB
+2015-06-05 12:41:22,535 [myid:] - INFO  [main:Environment@109] - Client environment:os.memory.total=239MB
+2015-06-05 12:41:22,537 [myid:] - INFO  [main:ZooKeeper@717] - Initiating client connection, connectString=192.168.42.3 sessionTimeout=30000 watcher=org.apache.zookeeper.ZooKeeperMain$MyWatcher@12d3e973
+2015-06-05 12:41:22,550 [myid:] - INFO  [main-SendThread(192.168.42.3:2181):ClientCnxn$SendThread@1097] - Opening socket connection to server 192.168.42.3/192.168.42.3:2181. Will not attempt to authenticate using SASL (unknown error)
+2015-06-05 12:41:22,558 [myid:] - INFO  [main-SendThread(192.168.42.3:2181):ClientCnxn$SendThread@969] - Socket connection established, initiating session, client: /192.168.42.254:53595, server: 192.168.42.3/192.168.42.3:2181
+2015-06-05 12:41:22,710 [myid:] - INFO  [main-SendThread(192.168.42.3:2181):ClientCnxn$SendThread@1359] - Session establishment complete on server 192.168.42.3/192.168.42.3:2181, sessionid = 0x3000570f87b0001, negotiated timeout = 30000
+
+WATCHER::
+
+WatchedEvent state:SyncConnected type:None path:null
+Created /fuga
++ echo '=== WAIT ==='
++ ../zk/zookeeper/bin/zkCli.sh -server 192.168.42.3 sync /
+=== WAIT ===
++ sleep 10
++ ../zk/zookeeper/bin/zkCli.sh -server 192.168.42.1 reconfig -add 'server.3=192.168.42.3:2888:3888;2181'
+/usr/bin/java
+/usr/bin/java
+Picked up JAVA_TOOL_OPTIONS: -javaagent:/usr/share/java/jayatanaag.jar 
+Picked up JAVA_TOOL_OPTIONS: -javaagent:/usr/share/java/jayatanaag.jar 
+Connecting to 192.168.42.3
+2015-06-05 12:41:23,463 [myid:] - INFO  [main:Environment@109] - Client environment:zookeeper.version=3.6.0-SNAPSHOT--1, built on 05/25/2015 02:04 GMT
+2015-06-05 12:41:23,465 [myid:] - INFO  [main:Environment@109] - Client environment:host.name=suda-PC2
+Connecting to 192.168.42.1
+2015-06-05 12:41:23,465 [myid:] - INFO  [main:Environment@109] - Client environment:java.version=1.7.0_79
+2015-06-05 12:41:23,467 [myid:] - INFO  [main:Environment@109] - Client environment:java.vendor=Oracle Corporation
+2015-06-05 12:41:23,467 [myid:] - INFO  [main:Environment@109] - Client environment:java.home=/usr/lib/jvm/java-7-openjdk-amd64/jre
+2015-06-05 12:41:23,467 [myid:] - INFO  [main:Environment@109] - Client environment:java.class.path=/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/classes:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/slf4j-log4j12-1.7.5.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/slf4j-api-1.7.5.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/servlet-api-2.5-20081211.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/netty-3.7.0.Final.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/log4j-1.2.16.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/jline-2.11.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/jetty-util-6.1.26.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/jetty-6.1.26.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/javacc.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/jackson-mapper-asl-1.9.11.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/jackson-core-asl-1.9.11.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/commons-cli-1.2.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../lib/*.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../zookeeper-*.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../src/java/lib/ivy-2.2.0.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../conf::/usr/share/java/jayatanaag.jar
+2015-06-05 12:41:23,467 [myid:] - INFO  [main:Environment@109] - Client environment:java.library.path=/usr/java/packages/lib/amd64:/usr/lib/x86_64-linux-gnu/jni:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/usr/lib/jni:/lib:/usr/lib
+2015-06-05 12:41:23,467 [myid:] - INFO  [main:Environment@109] - Client environment:java.io.tmpdir=/tmp
+2015-06-05 12:41:23,467 [myid:] - INFO  [main:Environment@109] - Client environment:java.compiler=<NA>
+2015-06-05 12:41:23,467 [myid:] - INFO  [main:Environment@109] - Client environment:os.name=Linux
+2015-06-05 12:41:23,468 [myid:] - INFO  [main:Environment@109] - Client environment:os.arch=amd64
+2015-06-05 12:41:23,468 [myid:] - INFO  [main:Environment@109] - Client environment:os.version=3.19.0-18-generic
+2015-06-05 12:41:23,468 [myid:] - INFO  [main:Environment@109] - Client environment:user.name=suda
+2015-06-05 12:41:23,468 [myid:] - INFO  [main:Environment@109] - Client environment:user.home=/home/suda
+2015-06-05 12:41:23,468 [myid:] - INFO  [main:Environment@109] - Client environment:user.dir=/home/suda/WORK/earthquake/example/zk.ether
+2015-06-05 12:41:23,468 [myid:] - INFO  [main:Environment@109] - Client environment:os.memory.free=231MB
+2015-06-05 12:41:23,469 [myid:] - INFO  [main:Environment@109] - Client environment:os.memory.max=239MB
+2015-06-05 12:41:23,470 [myid:] - INFO  [main:Environment@109] - Client environment:os.memory.total=239MB
+2015-06-05 12:41:23,472 [myid:] - INFO  [main:ZooKeeper@717] - Initiating client connection, connectString=192.168.42.3 sessionTimeout=30000 watcher=org.apache.zookeeper.ZooKeeperMain$MyWatcher@12d3e973
+2015-06-05 12:41:23,475 [myid:] - INFO  [main:Environment@109] - Client environment:zookeeper.version=3.6.0-SNAPSHOT--1, built on 05/25/2015 02:04 GMT
+2015-06-05 12:41:23,477 [myid:] - INFO  [main:Environment@109] - Client environment:host.name=suda-PC2
+2015-06-05 12:41:23,477 [myid:] - INFO  [main:Environment@109] - Client environment:java.version=1.7.0_79
+2015-06-05 12:41:23,479 [myid:] - INFO  [main:Environment@109] - Client environment:java.vendor=Oracle Corporation
+2015-06-05 12:41:23,479 [myid:] - INFO  [main:Environment@109] - Client environment:java.home=/usr/lib/jvm/java-7-openjdk-amd64/jre
+2015-06-05 12:41:23,479 [myid:] - INFO  [main:Environment@109] - Client environment:java.class.path=/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/classes:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/slf4j-log4j12-1.7.5.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/slf4j-api-1.7.5.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/servlet-api-2.5-20081211.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/netty-3.7.0.Final.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/log4j-1.2.16.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/jline-2.11.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/jetty-util-6.1.26.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/jetty-6.1.26.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/javacc.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/jackson-mapper-asl-1.9.11.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/jackson-core-asl-1.9.11.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/commons-cli-1.2.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../lib/*.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../zookeeper-*.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../src/java/lib/ivy-2.2.0.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../conf::/usr/share/java/jayatanaag.jar
+2015-06-05 12:41:23,479 [myid:] - INFO  [main:Environment@109] - Client environment:java.library.path=/usr/java/packages/lib/amd64:/usr/lib/x86_64-linux-gnu/jni:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/usr/lib/jni:/lib:/usr/lib
+2015-06-05 12:41:23,479 [myid:] - INFO  [main:Environment@109] - Client environment:java.io.tmpdir=/tmp
+2015-06-05 12:41:23,479 [myid:] - INFO  [main:Environment@109] - Client environment:java.compiler=<NA>
+2015-06-05 12:41:23,479 [myid:] - INFO  [main:Environment@109] - Client environment:os.name=Linux
+2015-06-05 12:41:23,479 [myid:] - INFO  [main:Environment@109] - Client environment:os.arch=amd64
+2015-06-05 12:41:23,479 [myid:] - INFO  [main:Environment@109] - Client environment:os.version=3.19.0-18-generic
+2015-06-05 12:41:23,480 [myid:] - INFO  [main:Environment@109] - Client environment:user.name=suda
+2015-06-05 12:41:23,480 [myid:] - INFO  [main:Environment@109] - Client environment:user.home=/home/suda
+2015-06-05 12:41:23,480 [myid:] - INFO  [main:Environment@109] - Client environment:user.dir=/home/suda/WORK/earthquake/example/zk.ether
+2015-06-05 12:41:23,480 [myid:] - INFO  [main:Environment@109] - Client environment:os.memory.free=231MB
+2015-06-05 12:41:23,481 [myid:] - INFO  [main:Environment@109] - Client environment:os.memory.max=239MB
+2015-06-05 12:41:23,481 [myid:] - INFO  [main:Environment@109] - Client environment:os.memory.total=239MB
+2015-06-05 12:41:23,484 [myid:] - INFO  [main:ZooKeeper@717] - Initiating client connection, connectString=192.168.42.1 sessionTimeout=30000 watcher=org.apache.zookeeper.ZooKeeperMain$MyWatcher@25ab52f7
+2015-06-05 12:41:23,490 [myid:] - INFO  [main-SendThread(192.168.42.3:2181):ClientCnxn$SendThread@1097] - Opening socket connection to server 192.168.42.3/192.168.42.3:2181. Will not attempt to authenticate using SASL (unknown error)
+2015-06-05 12:41:23,498 [myid:] - INFO  [main-SendThread(192.168.42.1:2181):ClientCnxn$SendThread@1097] - Opening socket connection to server 192.168.42.1/192.168.42.1:2181. Will not attempt to authenticate using SASL (unknown error)
+2015-06-05 12:41:23,506 [myid:] - INFO  [main-SendThread(192.168.42.1:2181):ClientCnxn$SendThread@969] - Socket connection established, initiating session, client: /192.168.42.254:41307, server: 192.168.42.1/192.168.42.1:2181
+2015-06-05 12:41:23,581 [myid:] - INFO  [main-SendThread(192.168.42.1:2181):ClientCnxn$SendThread@1359] - Session establishment complete on server 192.168.42.1/192.168.42.1:2181, sessionid = 0x1000570f4940001, negotiated timeout = 30000
+
+WATCHER::
+
+WatchedEvent state:SyncConnected type:None path:null
+Committed new configuration:
+server.1=192.168.42.1:2888:3888:participant;0.0.0.0:2181
+server.3=192.168.42.3:2888:3888:participant;0.0.0.0:2181
+version=100000008
++ echo '=== GET CONFIG ==='
+=== GET CONFIG ===
++ ../zk/zookeeper/bin/zkCli.sh -server 192.168.42.1 config
+/usr/bin/java
+Picked up JAVA_TOOL_OPTIONS: -javaagent:/usr/share/java/jayatanaag.jar 
+Connecting to 192.168.42.1
+2015-06-05 12:41:33,480 [myid:] - INFO  [main:Environment@109] - Client environment:zookeeper.version=3.6.0-SNAPSHOT--1, built on 05/25/2015 02:04 GMT
+2015-06-05 12:41:33,482 [myid:] - INFO  [main:Environment@109] - Client environment:host.name=suda-PC2
+2015-06-05 12:41:33,482 [myid:] - INFO  [main:Environment@109] - Client environment:java.version=1.7.0_79
+2015-06-05 12:41:33,484 [myid:] - INFO  [main:Environment@109] - Client environment:java.vendor=Oracle Corporation
+2015-06-05 12:41:33,484 [myid:] - INFO  [main:Environment@109] - Client environment:java.home=/usr/lib/jvm/java-7-openjdk-amd64/jre
+2015-06-05 12:41:33,484 [myid:] - INFO  [main:Environment@109] - Client environment:java.class.path=/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/classes:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/slf4j-log4j12-1.7.5.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/slf4j-api-1.7.5.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/servlet-api-2.5-20081211.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/netty-3.7.0.Final.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/log4j-1.2.16.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/jline-2.11.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/jetty-util-6.1.26.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/jetty-6.1.26.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/javacc.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/jackson-mapper-asl-1.9.11.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/jackson-core-asl-1.9.11.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/commons-cli-1.2.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../lib/*.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../zookeeper-*.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../src/java/lib/ivy-2.2.0.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../conf::/usr/share/java/jayatanaag.jar
+2015-06-05 12:41:33,484 [myid:] - INFO  [main:Environment@109] - Client environment:java.library.path=/usr/java/packages/lib/amd64:/usr/lib/x86_64-linux-gnu/jni:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/usr/lib/jni:/lib:/usr/lib
+2015-06-05 12:41:33,484 [myid:] - INFO  [main:Environment@109] - Client environment:java.io.tmpdir=/tmp
+2015-06-05 12:41:33,484 [myid:] - INFO  [main:Environment@109] - Client environment:java.compiler=<NA>
+2015-06-05 12:41:33,485 [myid:] - INFO  [main:Environment@109] - Client environment:os.name=Linux
+2015-06-05 12:41:33,485 [myid:] - INFO  [main:Environment@109] - Client environment:os.arch=amd64
+2015-06-05 12:41:33,485 [myid:] - INFO  [main:Environment@109] - Client environment:os.version=3.19.0-18-generic
+2015-06-05 12:41:33,485 [myid:] - INFO  [main:Environment@109] - Client environment:user.name=suda
+2015-06-05 12:41:33,485 [myid:] - INFO  [main:Environment@109] - Client environment:user.home=/home/suda
+2015-06-05 12:41:33,485 [myid:] - INFO  [main:Environment@109] - Client environment:user.dir=/home/suda/WORK/earthquake/example/zk.ether
+2015-06-05 12:41:33,485 [myid:] - INFO  [main:Environment@109] - Client environment:os.memory.free=231MB
+2015-06-05 12:41:33,486 [myid:] - INFO  [main:Environment@109] - Client environment:os.memory.max=239MB
+2015-06-05 12:41:33,487 [myid:] - INFO  [main:Environment@109] - Client environment:os.memory.total=239MB
+2015-06-05 12:41:33,489 [myid:] - INFO  [main:ZooKeeper@717] - Initiating client connection, connectString=192.168.42.1 sessionTimeout=30000 watcher=org.apache.zookeeper.ZooKeeperMain$MyWatcher@12d3e973
+2015-06-05 12:41:33,502 [myid:] - INFO  [main-SendThread(192.168.42.1:2181):ClientCnxn$SendThread@1097] - Opening socket connection to server 192.168.42.1/192.168.42.1:2181. Will not attempt to authenticate using SASL (unknown error)
+2015-06-05 12:41:33,509 [myid:] - INFO  [main-SendThread(192.168.42.1:2181):ClientCnxn$SendThread@969] - Socket connection established, initiating session, client: /192.168.42.254:41328, server: 192.168.42.1/192.168.42.1:2181
+2015-06-05 12:41:33,656 [myid:] - INFO  [main-SendThread(192.168.42.1:2181):ClientCnxn$SendThread@1359] - Session establishment complete on server 192.168.42.1/192.168.42.1:2181, sessionid = 0x1000570f4940002, negotiated timeout = 30000
+
+WATCHER::
+
+WatchedEvent state:SyncConnected type:None path:null
+server.1=192.168.42.1:2888:3888:participant;0.0.0.0:2181
+server.3=192.168.42.3:2888:3888:participant;0.0.0.0:2181
+version=100000008
++ echo '=== GET HOGE ==='
+=== GET HOGE ===
++ ../zk/zookeeper/bin/zkCli.sh -server 192.168.42.1 get /hoge
+/usr/bin/java
+Picked up JAVA_TOOL_OPTIONS: -javaagent:/usr/share/java/jayatanaag.jar 
+Connecting to 192.168.42.1
+2015-06-05 12:41:34,207 [myid:] - INFO  [main:Environment@109] - Client environment:zookeeper.version=3.6.0-SNAPSHOT--1, built on 05/25/2015 02:04 GMT
+2015-06-05 12:41:34,209 [myid:] - INFO  [main:Environment@109] - Client environment:host.name=suda-PC2
+2015-06-05 12:41:34,209 [myid:] - INFO  [main:Environment@109] - Client environment:java.version=1.7.0_79
+2015-06-05 12:41:34,211 [myid:] - INFO  [main:Environment@109] - Client environment:java.vendor=Oracle Corporation
+2015-06-05 12:41:34,211 [myid:] - INFO  [main:Environment@109] - Client environment:java.home=/usr/lib/jvm/java-7-openjdk-amd64/jre
+2015-06-05 12:41:34,211 [myid:] - INFO  [main:Environment@109] - Client environment:java.class.path=/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/classes:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/slf4j-log4j12-1.7.5.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/slf4j-api-1.7.5.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/servlet-api-2.5-20081211.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/netty-3.7.0.Final.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/log4j-1.2.16.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/jline-2.11.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/jetty-util-6.1.26.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/jetty-6.1.26.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/javacc.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/jackson-mapper-asl-1.9.11.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/jackson-core-asl-1.9.11.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/commons-cli-1.2.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../lib/*.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../zookeeper-*.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../src/java/lib/ivy-2.2.0.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../conf::/usr/share/java/jayatanaag.jar
+2015-06-05 12:41:34,211 [myid:] - INFO  [main:Environment@109] - Client environment:java.library.path=/usr/java/packages/lib/amd64:/usr/lib/x86_64-linux-gnu/jni:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/usr/lib/jni:/lib:/usr/lib
+2015-06-05 12:41:34,212 [myid:] - INFO  [main:Environment@109] - Client environment:java.io.tmpdir=/tmp
+2015-06-05 12:41:34,212 [myid:] - INFO  [main:Environment@109] - Client environment:java.compiler=<NA>
+2015-06-05 12:41:34,212 [myid:] - INFO  [main:Environment@109] - Client environment:os.name=Linux
+2015-06-05 12:41:34,212 [myid:] - INFO  [main:Environment@109] - Client environment:os.arch=amd64
+2015-06-05 12:41:34,212 [myid:] - INFO  [main:Environment@109] - Client environment:os.version=3.19.0-18-generic
+2015-06-05 12:41:34,212 [myid:] - INFO  [main:Environment@109] - Client environment:user.name=suda
+2015-06-05 12:41:34,212 [myid:] - INFO  [main:Environment@109] - Client environment:user.home=/home/suda
+2015-06-05 12:41:34,212 [myid:] - INFO  [main:Environment@109] - Client environment:user.dir=/home/suda/WORK/earthquake/example/zk.ether
+2015-06-05 12:41:34,212 [myid:] - INFO  [main:Environment@109] - Client environment:os.memory.free=231MB
+2015-06-05 12:41:34,214 [myid:] - INFO  [main:Environment@109] - Client environment:os.memory.max=239MB
+2015-06-05 12:41:34,214 [myid:] - INFO  [main:Environment@109] - Client environment:os.memory.total=239MB
+2015-06-05 12:41:34,216 [myid:] - INFO  [main:ZooKeeper@717] - Initiating client connection, connectString=192.168.42.1 sessionTimeout=30000 watcher=org.apache.zookeeper.ZooKeeperMain$MyWatcher@12d3e973
+2015-06-05 12:41:34,231 [myid:] - INFO  [main-SendThread(192.168.42.1:2181):ClientCnxn$SendThread@1097] - Opening socket connection to server 192.168.42.1/192.168.42.1:2181. Will not attempt to authenticate using SASL (unknown error)
+2015-06-05 12:41:34,239 [myid:] - INFO  [main-SendThread(192.168.42.1:2181):ClientCnxn$SendThread@969] - Socket connection established, initiating session, client: /192.168.42.254:41341, server: 192.168.42.1/192.168.42.1:2181
+2015-06-05 12:41:34,367 [myid:] - INFO  [main-SendThread(192.168.42.1:2181):ClientCnxn$SendThread@1359] - Session establishment complete on server 192.168.42.1/192.168.42.1:2181, sessionid = 0x1000570f4940003, negotiated timeout = 30000
+
+WATCHER::
+
+WatchedEvent state:SyncConnected type:None path:null
+fubar
++ ../zk/zookeeper/bin/zkCli.sh -server 192.168.42.1 get /fuga
+/usr/bin/java
+Picked up JAVA_TOOL_OPTIONS: -javaagent:/usr/share/java/jayatanaag.jar 
+Connecting to 192.168.42.1
+2015-06-05 12:41:34,978 [myid:] - INFO  [main:Environment@109] - Client environment:zookeeper.version=3.6.0-SNAPSHOT--1, built on 05/25/2015 02:04 GMT
+2015-06-05 12:41:34,981 [myid:] - INFO  [main:Environment@109] - Client environment:host.name=suda-PC2
+2015-06-05 12:41:34,981 [myid:] - INFO  [main:Environment@109] - Client environment:java.version=1.7.0_79
+2015-06-05 12:41:34,982 [myid:] - INFO  [main:Environment@109] - Client environment:java.vendor=Oracle Corporation
+2015-06-05 12:41:34,983 [myid:] - INFO  [main:Environment@109] - Client environment:java.home=/usr/lib/jvm/java-7-openjdk-amd64/jre
+2015-06-05 12:41:34,983 [myid:] - INFO  [main:Environment@109] - Client environment:java.class.path=/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/classes:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/slf4j-log4j12-1.7.5.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/slf4j-api-1.7.5.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/servlet-api-2.5-20081211.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/netty-3.7.0.Final.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/log4j-1.2.16.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/jline-2.11.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/jetty-util-6.1.26.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/jetty-6.1.26.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/javacc.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/jackson-mapper-asl-1.9.11.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/jackson-core-asl-1.9.11.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../build/lib/commons-cli-1.2.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../lib/*.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../zookeeper-*.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../src/java/lib/ivy-2.2.0.jar:/home/suda/WORK/earthquake/example/zk/zookeeper/bin/../conf::/usr/share/java/jayatanaag.jar
+2015-06-05 12:41:34,983 [myid:] - INFO  [main:Environment@109] - Client environment:java.library.path=/usr/java/packages/lib/amd64:/usr/lib/x86_64-linux-gnu/jni:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/usr/lib/jni:/lib:/usr/lib
+2015-06-05 12:41:34,983 [myid:] - INFO  [main:Environment@109] - Client environment:java.io.tmpdir=/tmp
+2015-06-05 12:41:34,983 [myid:] - INFO  [main:Environment@109] - Client environment:java.compiler=<NA>
+2015-06-05 12:41:34,983 [myid:] - INFO  [main:Environment@109] - Client environment:os.name=Linux
+2015-06-05 12:41:34,983 [myid:] - INFO  [main:Environment@109] - Client environment:os.arch=amd64
+2015-06-05 12:41:34,983 [myid:] - INFO  [main:Environment@109] - Client environment:os.version=3.19.0-18-generic
+2015-06-05 12:41:34,983 [myid:] - INFO  [main:Environment@109] - Client environment:user.name=suda
+2015-06-05 12:41:34,983 [myid:] - INFO  [main:Environment@109] - Client environment:user.home=/home/suda
+2015-06-05 12:41:34,983 [myid:] - INFO  [main:Environment@109] - Client environment:user.dir=/home/suda/WORK/earthquake/example/zk.ether
+2015-06-05 12:41:34,983 [myid:] - INFO  [main:Environment@109] - Client environment:os.memory.free=231MB
+2015-06-05 12:41:34,985 [myid:] - INFO  [main:Environment@109] - Client environment:os.memory.max=239MB
+2015-06-05 12:41:34,985 [myid:] - INFO  [main:Environment@109] - Client environment:os.memory.total=239MB
+2015-06-05 12:41:34,987 [myid:] - INFO  [main:ZooKeeper@717] - Initiating client connection, connectString=192.168.42.1 sessionTimeout=30000 watcher=org.apache.zookeeper.ZooKeeperMain$MyWatcher@12d3e973
+2015-06-05 12:41:35,001 [myid:] - INFO  [main-SendThread(192.168.42.1:2181):ClientCnxn$SendThread@1097] - Opening socket connection to server 192.168.42.1/192.168.42.1:2181. Will not attempt to authenticate using SASL (unknown error)
+2015-06-05 12:41:35,008 [myid:] - INFO  [main-SendThread(192.168.42.1:2181):ClientCnxn$SendThread@969] - Socket connection established, initiating session, client: /192.168.42.254:41356, server: 192.168.42.1/192.168.42.1:2181
+2015-06-05 12:41:35,151 [myid:] - INFO  [main-SendThread(192.168.42.1:2181):ClientCnxn$SendThread@1359] - Session establishment complete on server 192.168.42.1/192.168.42.1:2181, sessionid = 0x1000570f4940004, negotiated timeout = 30000
+
+WATCHER::
+
+WatchedEvent state:SyncConnected type:None path:null
+barfu
++ ./801-inspection-end.sh
++ curl --data @InspectionEndEvents/_earthquake_ether_inspector.json http://localhost:10000/api/v1
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   170  100     2  100   168    356  29935 --:--:-- --:--:-- --:--:-- 33600
+{}+ curl --data @InspectionEndEvents/zk1.json http://localhost:10000/api/v1
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   146  100     2  100   144     73   5317 --:--:-- --:--:-- --:--:--  5333
+{}+ curl --data @InspectionEndEvents/zk2.json http://localhost:10000/api/v1
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   146  100     2  100   144    368  26538 --:--:-- --:--:-- --:--:-- 28800
+{}+ curl --data @InspectionEndEvents/zk3.json http://localhost:10000/api/v1
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   146  100     2  100   144    368  26529 --:--:-- --:--:-- --:--:-- 28800
+{}+ ./802-check-leaders.py --wait --foo-bar-this-is-a-dummy-arg-for-grepping
+Parsing Zookeeper version: 3.6.0-SNAPSHOT--1, built on 04/09/2015 07:07 GMT
+Clients:
+ /192.168.42.254:41376[0](queued=0,recved=1,sent=0)
+
+Latency min/avg/max: 0/56/231
+Received: 12
+Sent: 11
+Connections: 1
+Outstanding: 0
+Zxid: 0x10000000b
+Mode: leader
+Node count: 7
+: 
+Parsed {'zxid': '0x10000000b', 'mode': 'leader'}: 
+Parsing Zookeeper version: 3.6.0-SNAPSHOT--1, built on 04/09/2015 07:07 GMT
+Clients:
+ /192.168.42.254:45673[0](queued=0,recved=1,sent=0)
+
+Latency min/avg/max: 0/0/0
+Received: 2
+Sent: 1
+Connections: 1
+Outstanding: 0
+Zxid: 0x10000000b
+Mode: observer
+Node count: 7
+: 
+Parsed {'zxid': '0x10000000b', 'mode': 'observer'}: 
+Parsing Zookeeper version: 3.6.0-SNAPSHOT--1, built on 04/09/2015 07:07 GMT
+Clients:
+ /192.168.42.254:53695[0](queued=0,recved=1,sent=0)
+
+Latency min/avg/max: 119/154/225
+Received: 6
+Sent: 5
+Connections: 1
+Outstanding: 0
+Zxid: 0x10000000b
+Mode: follower
+Node count: 7
+: 
+Parsed {'zxid': '0x10000000b', 'mode': 'follower'}: 
+[{'zxid': '0x10000000b', 'mode': 'leader'}, {'zxid': '0x10000000b', 'mode': 'observer'}, {'zxid': '0x10000000b', 'mode': 'follower'}]
+OK
++ ./901-kill-containers.sh
++ mkdir /tmp/eq-zklog
+mkdir: ディレクトリ `/tmp/eq-zklog' を作成できません: ファイルが存在します
+++ mktemp -d /tmp/eq-zklog/XXXXX
++ LOGDIR=/tmp/eq-zklog/heeBl
++ for f in zk1 zk2 zk3
++ docker cp zk1:/log /tmp/eq-zklog/heeBl/zk1
++ for f in zk1 zk2 zk3
++ docker cp zk2:/log /tmp/eq-zklog/heeBl/zk2
++ for f in zk1 zk2 zk3
++ docker cp zk3:/log /tmp/eq-zklog/heeBl/zk3
++ docker rm -f zk1 zk2 zk3
+zk1
+zk2
+zk3
