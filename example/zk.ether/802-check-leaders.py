@@ -36,28 +36,26 @@ def get_stats():
         l.append(d)
     return l
 
-def check_leader_elected(l):
-    leaders = filter(lambda d: d['mode'] == 'leader', l)
-    assert len(leaders) == 1, 'Bad leader election: %s' % l
 
-
-
-def main_nowait():
+def oneshot():
     l = get_stats()
     print l
-    check_leader_elected(l)
+    leaders = filter(lambda d: d['mode'] == 'leader', l)
+    observers = filter(lambda d: d['mode'] == 'observer', l)    
+    assert len(leaders) == 1, 'Bad leader election: %s' % l
+    assert len(observers) == 0, 'Bad observers: %s' % l
     print 'OK'
     
 
-def main_wait():
-    THRESHOLD=10
+def main():
+    THRESHOLD=50
     i = 0
     while True:
         i += 1
         if i > THRESHOLD:
             raise RuntimeError('too many errors')
         try:
-            main_nowait()
+            oneshot()
             return
         except Exception as e:
             traceback.print_exc()
@@ -66,8 +64,4 @@ def main_wait():
         
 
 if __name__ == '__main__':
-    if '--wait' in sys.argv:
-        main_wait()
-    else:
-        main_nowait()
-            
+    main()

@@ -8,10 +8,10 @@ do
     ./502-set-pipework.sh
     ./503-start-zk.sh
     sleep 5
-    ./802-check-leaders.py --wait
+    ./802-check-leaders.py
     ./601-reconfig.sh
     ./801-inspection-end.sh
-    ./802-check-leaders.py --wait --foo-bar-this-is-a-dummy-arg-for-grepping
+    ./802-check-leaders.py
     ./901-kill-containers.sh
     sleep 10
 done
