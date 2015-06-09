@@ -1,0 +1,4 @@
+Expected: LFF ([leader, follower, follower])
+
+Unexpected: LOF([leader, observer, follower]), LOO
+
