@@ -2,3 +2,5 @@ Expected: LFF ([leader, follower, follower])
 
 Unexpected: LOF([leader, observer, follower]), LOO
 
+
+Some unreliable things: some netem entries were enabled
